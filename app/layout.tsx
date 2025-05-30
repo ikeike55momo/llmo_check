@@ -4,7 +4,21 @@
  */
 
 import type { Metadata } from 'next';
+import { Inter, Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
+
+/** Google Fonts設定 */
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  variable: '--font-noto-sans-jp',
+  display: 'swap',
+});
 
 /** サイトのメタデータ設定 */
 export const metadata: Metadata = {
@@ -44,15 +58,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className="h-full">
+    <html lang="ja" className={`h-full ${inter.variable} ${notoSansJP.variable}`}>
       <head>
-        {/* Google Fonts - Inter & Noto Sans JP */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" 
-          rel="stylesheet" 
-        />
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
       </head>
