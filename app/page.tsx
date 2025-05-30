@@ -1,0 +1,178 @@
+/**
+ * LLMO診断サイト - メインページ
+ * フォームと結果表示を統合し、状態管理を行う
+ */
+
+'use client';
+
+import { useState } from 'react';
+import DiagnoseForm from '@/components/DiagnoseForm';
+import ResultDisplay from '@/components/ResultDisplay';
+import type { DiagnosisResult, FormStatus, ErrorInfo } from '@/types/diagnosis';
+
+/**
+ * メインページコンポーネント
+ * アプリケーション全体の状態管理と診断フローを制御
+ */
+export default function HomePage() {
+  /** フォームの現在の状態 */
+  const [formStatus, setFormStatus] = useState<FormStatus>('idle');
+  /** 診断結果データ */
+  const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | undefined>(undefined);
+  /** エラー情報 */
+  const [errorInfo, setErrorInfo] = useState<ErrorInfo | undefined>(undefined);
+
+  /**
+   * 診断実行ハンドラー
+   * APIを呼び出し、結果を状態に反映
+   */
+  const handleDiagnose = async (url: string): Promise<void> => {
+    // 状態をリセット
+    setFormStatus('loading');
+    setDiagnosisResult(undefined);
+    setErrorInfo(undefined);
+
+    try {
+      // 診断API呼び出し
+      const response = await fetch('/api/diagnose', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `診断API呼び出しに失敗しました (${response.status})`);
+      }
+
+      const responseData = await response.json();
+      
+      // 診断結果を状態に設定
+      const result: DiagnosisResult = {
+        url: url,
+        analysis: responseData.result,
+        analyzedAt: new Date().toISOString(),
+        cached: responseData.cached || false,
+      };
+
+      setDiagnosisResult(result);
+      setFormStatus('success');
+
+    } catch (error) {
+      console.error('診断エラー:', error);
+      
+      // エラー情報を設定
+      setErrorInfo({
+        message: error instanceof Error ? error.message : '診断処理中にエラーが発生しました',
+        code: error instanceof Error && 'code' in error ? String(error.code) : undefined,
+      });
+      setFormStatus('error');
+    }
+  };
+
+  /**
+   * 状態リセットハンドラー
+   * 新しい診断を開始するために状態を初期化
+   */
+  const handleReset = (): void => {
+    setFormStatus('idle');
+    setDiagnosisResult(undefined);
+    setErrorInfo(undefined);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-neutral-light to-white">
+      <div className="container mx-auto px-4 py-12">
+        {/* メインヘッダー */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            AI powered Webサイト診断
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Claude Sonnet 4 AIを活用して、あらゆるWebサイトのSEO、コンテンツ構造、
+            ユーザビリティを包括的に分析します。URLを入力するだけで、
+            プロフェッショナルレベルの診断結果を即座に取得できます。
+          </p>
+        </div>
+
+        {/* 機能紹介 */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12 max-w-5xl mx-auto">
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-2">即座の分析</h3>
+            <p className="text-sm text-gray-600">
+              URLを入力するだけで、数秒から数十秒で詳細な診断結果を取得
+            </p>
+          </div>
+
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-2">高精度AI分析</h3>
+            <p className="text-sm text-gray-600">
+              Claude Sonnet 4による最先端のAI技術で正確な診断を実施
+            </p>
+          </div>
+
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-2">スマートキャッシュ</h3>
+            <p className="text-sm text-gray-600">
+              24時間以内の結果はキャッシュから高速取得
+            </p>
+          </div>
+        </div>
+
+        {/* メインコンテンツエリア */}
+        <div className="max-w-6xl mx-auto">
+          {/* 診断フォーム */}
+          <DiagnoseForm onDiagnose={handleDiagnose} status={formStatus} />
+          
+          {/* 結果表示 */}
+          <ResultDisplay
+            status={formStatus}
+            data={diagnosisResult}
+            errorInfo={errorInfo}
+            onReset={handleReset}
+          />
+        </div>
+
+        {/* フッター情報 */}
+        <div className="mt-16 text-center">
+          <div className="max-w-2xl mx-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              プライバシーとセキュリティ
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+              <div className="flex items-start">
+                <svg className="w-4 h-4 text-secondary mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>個人情報は収集しません</span>
+              </div>
+              <div className="flex items-start">
+                <svg className="w-4 h-4 text-secondary mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <span>全通信はHTTPS暗号化</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+} 

@@ -1,0 +1,117 @@
+---
+description: Apply these rules when creating the project
+globs:
+alwaysApply: true
+---
+## Project Overview
+
+* **Type:** Web Tool
+* **Description:** A web tool that analyzes any public webpage URL and returns an AI-powered diagnosis of its content.
+* **Primary Goal:** quick assessment of a site’s structure, metadata, headings, and overall health
+
+## Project Structure
+
+### Framework-Specific Routing
+
+* **Directory Rules:**
+    * Next.js 14 (App Router): Use `app/[route]/page.tsx` and `app/[route]/layout.tsx`. API routes under `app/api/[route]/route.ts`.
+    * Example 1: “Next.js 14 (App Router)” → `app/page.tsx`, `app/layout.tsx`, nested route folders.
+    * Example 2: “Next.js (Pages Router)” → `pages/[route].tsx` pattern (not used).
+    * Example 3: “React Router 6” → `src/routes/` with `createBrowserRouter` (not used).
+
+### Core Directories
+
+* **Versioned Structure:**
+    * app: Next.js 14 App Router pages, layouts, global styles.
+    * app/api: Next.js 14 Edge Function Route Handlers (`route.ts`) with `runtime='edge'`.
+    * components: React (TSX) UI components styled with Tailwind CSS.
+    * lib: Utility modules (Anthropic, Supabase, Scraper) for server-side logic.
+    * types: TypeScript type definitions (`diagnosis.ts`).
+
+### Key Files
+
+* **Stack-Versioned Patterns:**
+    * app/page.tsx: Next.js 14 App Router main page component.
+    * app/layout.tsx: Next.js 14 root layout with global styles and scripts.
+    * app/api/diagnose/route.ts: Next.js 14 Edge API Route Handler for diagnosis.
+    * components/DiagnoseForm.tsx: URL input form component.
+    * components/ResultDisplay.tsx: Diagnosis result display component.
+    * lib/scraper.ts: Built-in scraper logic with fetch & regex.
+    * lib/anthropic.ts: Anthropic Claude Sonnet 4 API configuration.
+    * lib/supabase.ts: Supabase client configuration with RLS.
+    * types/diagnosis.ts: Type definitions for diagnosis data.
+
+## Tech Stack Rules
+
+* **Version Enforcement:**
+    * next@14: Enforce App Router. No `pages/` directory. Use `app/` with nested routes.
+    * tailwind@latest: Use utility-first classes. Purge unused styles via JIT mode.
+    * vercel-edge-runtime: All API routes under `app/api/*/route.ts` must set `runtime='edge'`.
+    * supabase@latest: Enable Row Level Security (RLS). Use environment variables for keys.
+    * @anthropic/client@4: max_tokens ≤ 4000. Call from server/edge only.
+    * scraping-bee@latest: Use only as fallback for scraper.
+
+## PRD Compliance
+
+* **Non-Negotiable:**
+    * "Cached response < 2s, cold call < 15s": Performance constraints.
+    * "Enable Row Level Security (RLS)": Security constraint.
+    * "Japanese UI": UI localization requirement.
+
+## App Flow Integration
+
+* **Stack-Aligned Flow:**
+    * Next.js 14 Diagnosis Flow → `app/api/diagnose/route.ts` uses Edge Runtime, checks Supabase cache, fetches HTML, calls Claude API.
+    * Main Page Flow → `app/page.tsx` renders `DiagnoseForm` → triggers `app/api/diagnose/route.ts` → `ResultDisplay` shows AI analysis.
+
+## Best Practices
+
+* Next.js 14:
+    * Use App Router with nested directories.
+    * Leverage server components and actions for data fetching.
+    * Avoid mixing Pages Router patterns.
+* TypeScript:
+    * Enable strict mode. Define comprehensive types for API responses.
+* Tailwind CSS:
+    * Use JIT mode. Avoid global CSS overrides. Utilize component-level styling.
+* Vercel Edge Functions:
+    * Keep dependencies minimal. Handle edge-specific environment limitations.
+    * Set `export const runtime = 'edge'`.
+* Supabase:
+    * Enable RLS. Use service role for secure operations. Implement cache lookups before inserts.
+* Anthropic Claude Sonnet 4 API:
+    * Respect token limits. Implement retry/backoff. Sanitize inputs to avoid prompt injection.
+* Web Scraper:
+    * Use native fetch. Implement robust error handling and content limits (10k chars).
+    * Fallback to ScrapingBee when needed.
+* Google Analytics:
+    * Load via Next.js Script in layout. Anonymize IP. Respect user opt-outs.
+* Sentry:
+    * Initialize in both client and edge. Capture exceptions and performance metrics.
+
+## Rules
+
+* Derive folder/file patterns directly from techStackDoc versions.
+* If Next.js 14 App Router: enforce `app/` directory with nested route folders; no `pages/`.
+* Place Edge Functions under `app/api/[route]/route.ts` with `runtime='edge'`.
+* Always check Supabase cache before external API calls.
+* Limit AI prompt size to max_tokens 4000.
+* Maintain Japanese UI across all pages and components.
+
+## Rules Metrics
+
+Before starting the project development, create a metrics file in the root of the project called `cursor_metrics.md`.
+
+### Instructions:
+
+* Each time a cursor rule is used as context, update `cursor_metrics.md`.
+* Use the following format for `cursor_metrics.md`:
+
+# Rules Metrics
+
+## Usage
+The number of times rules is used as context
+
+* rule-name.mdc: 5
+* another-rule.mdc: 2
+* ...other rules
