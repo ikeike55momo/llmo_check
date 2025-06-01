@@ -3,6 +3,8 @@ name: 🔄 Claude Code Complete Workflow
 on:
   issues:
     types: [opened]
+  issue_comment:
+    types: [created]
     
 # 並列実行を許可
 concurrency:
@@ -16,19 +18,34 @@ permissions:
 
 jobs:
   complete-workflow:
-    if: contains(github.event.issue.labels.*.name, 'claude-dev')
+    # 条件を修正：Issueがclaudeラベル付きで作成された場合、またはコメントでClaudeがメンションされた場合
+    if: |
+      (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'claude-dev')) ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
     runs-on: ubuntu-latest
-    # 複数のジョブを並列実行可能にする
     strategy:
-      max-parallel: 10  # 最大10個まで並列実行
+      max-parallel: 10
     
     steps:
+      - name: 🔍 Detect trigger type
+        id: trigger
+        run: |
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            echo "trigger=comment" >> $GITHUB_OUTPUT
+            echo "issue_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            echo "comment_body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+          else
+            echo "trigger=issue" >> $GITHUB_OUTPUT
+            echo "issue_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+          fi
+          
       - name: 🔀 Generate unique branch name
         id: branch
         run: |
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
           RANDOM_ID=$(openssl rand -hex 4)
-          BRANCH_NAME="claude-dev/issue-${{ github.event.issue.number }}-${TIMESTAMP}-${RANDOM_ID}"
+          ISSUE_NUM=${{ steps.trigger.outputs.issue_number }}
+          BRANCH_NAME="claude-dev/issue-${ISSUE_NUM}-${TIMESTAMP}-${RANDOM_ID}"
           echo "branch_name=${BRANCH_NAME}" >> $GITHUB_OUTPUT
           echo "🌳 Branch: ${BRANCH_NAME}"
           
@@ -36,38 +53,51 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0  # 全履歴を取得（競合解決のため）
+          fetch-depth: 0
           
       - name: 🌳 Create and checkout new branch
         run: |
           git config --global user.name "Claude Code Bot"
           git config --global user.email "claude-bot@example.com"
-          
-          # 最新のmainを取得
           git fetch origin main
           git checkout -b ${{ steps.branch.outputs.branch_name }} origin/main
           
-          echo "📍 Current branch: $(git branch --show-current)"
-          echo "📊 Latest commit: $(git log -1 --oneline)"
-          
       - name: 🔒 Setup workspace isolation
         run: |
-          # 作業ディレクトリを隔離
-          WORKSPACE_DIR="claude-workspace-${{ github.event.issue.number }}"
+          WORKSPACE_DIR="claude-workspace-${{ steps.trigger.outputs.issue_number }}"
           mkdir -p "${WORKSPACE_DIR}"
           echo "workspace_dir=${WORKSPACE_DIR}" >> $GITHUB_ENV
           
       - name: 📊 Check for conflicts
         id: conflict-check
         run: |
-          # 他の進行中のPRをチェック
           echo "🔍 Checking for potential conflicts..."
           git fetch origin 'refs/pull/*/head:refs/remotes/origin/pr/*'
-          
-          # 競合する可能性のあるファイルをリスト
           ACTIVE_PRS=$(gh pr list --state open --label claude-dev --json number,headRefName)
           echo "active_prs=${ACTIVE_PRS}" >> $GITHUB_OUTPUT
           
+      - name: 📝 Get issue details
+        id: issue-details
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = ${{ steps.trigger.outputs.issue_number }};
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+            
+            // コメントトリガーの場合は、コメント内容も取得
+            let instructions = issue.data.body;
+            if ('${{ steps.trigger.outputs.trigger }}' === 'comment') {
+              instructions = `${{ steps.trigger.outputs.comment_body }}`;
+            }
+            
+            core.setOutput('title', issue.data.title);
+            core.setOutput('body', issue.data.body);
+            core.setOutput('instructions', instructions);
+            
       - name: 🤖 Execute Complete Workflow
         uses: anthropics/claude-code-action@beta
         with:
@@ -76,9 +106,13 @@ jobs:
           branch: ${{ steps.branch.outputs.branch_name }}
           command: |
             # 作業情報
-            Issue番号: #${{ github.event.issue.number }}
-            タイトル: ${{ github.event.issue.title }}
+            Issue番号: #${{ steps.trigger.outputs.issue_number }}
+            タイトル: ${{ steps.issue-details.outputs.title }}
+            トリガー: ${{ steps.trigger.outputs.trigger }}
             作業ブランチ: ${{ steps.branch.outputs.branch_name }}
+            
+            # 指示内容
+            ${{ steps.issue-details.outputs.instructions }}
             
             # 並列実行の注意事項
             - このタスクは他のタスクと並列で実行される可能性があります
@@ -89,7 +123,7 @@ jobs:
             
             ## 1. 📋 要件定義作成
             - Issueの内容を分析して要件定義を作成
-            - `/docs/requirements/issue-${{ github.event.issue.number }}.md`に保存
+            - `/docs/requirements/issue-${{ steps.trigger.outputs.issue_number }}.md`に保存
             - 要件定義には以下を含める：
               - 機能概要
               - 技術仕様
@@ -123,12 +157,12 @@ jobs:
             - `.claude/completed_tasks.md`に以下の形式で記録：
             
             ```markdown
-            ## Task: ${{ github.event.issue.title }}
-            - Issue: #${{ github.event.issue.number }}
+            ## Task: ${{ steps.issue-details.outputs.title }}
+            - Issue: #${{ steps.trigger.outputs.issue_number }}
             - Date: $(date +"%Y-%m-%d %H:%M:%S")
             - Branch: ${{ steps.branch.outputs.branch_name }}
             - Status: ✅ Completed
-            - Type: [開発タイプ]
+            - Trigger: ${{ steps.trigger.outputs.trigger }}
             - Files:
               - Created: [作成したファイル一覧]
               - Modified: [修正したファイル一覧]
@@ -142,7 +176,6 @@ jobs:
             
       - name: 🔍 Post-execution conflict check
         run: |
-          # 実行後の競合チェック
           git fetch origin main
           if ! git merge-base --is-ancestor origin/main HEAD; then
             echo "⚠️ Main branch has been updated during execution"
@@ -154,17 +187,17 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "🤖 Complete workflow for issue #${{ github.event.issue.number }}"
-          title: "🤖 [CLAUDE-DEV] ${{ github.event.issue.title }}"
+          commit-message: "🤖 Complete workflow for issue #${{ steps.trigger.outputs.issue_number }}"
+          title: "🤖 [CLAUDE-DEV] ${{ steps.issue-details.outputs.title }}"
           body: |
             ## 🔄 自動生成されたPR
             
-            このPRはIssue #${{ github.event.issue.number }} に基づいて自動生成されました。
+            このPRはIssue #${{ steps.trigger.outputs.issue_number }} に基づいて自動生成されました。
             
             ### 🌳 ブランチ情報
             - 作業ブランチ: `${{ steps.branch.outputs.branch_name }}`
             - ベースブランチ: `main`
-            - 作成時刻: `${{ steps.branch.outputs.branch_name }}`
+            - トリガー: ${{ steps.trigger.outputs.trigger }}
             
             ### 🔄 並列実行情報
             - 同時実行された他のワークフロー: ${{ steps.conflict-check.outputs.active_prs }}
@@ -177,18 +210,7 @@ jobs:
             - ✅ 動作確認・エラーチェック
             - ✅ 完了記録
             
-            ### レビューポイント
-            - [ ] 要件定義が適切か
-            - [ ] 実装が要件を満たしているか
-            - [ ] 動作確認が完了しているか
-            - [ ] エラーがないことが確認済みか
-            - [ ] コーディング規約に準拠しているか
-            
-            ### 競合確認
-            - [ ] 他のPRとの競合がないか
-            - [ ] mainブランチとの競合がないか
-            
-            Closes #${{ github.event.issue.number }}
+            Closes #${{ steps.trigger.outputs.issue_number }}
           branch: ${{ steps.branch.outputs.branch_name }}
           delete-branch: true
           
@@ -197,7 +219,7 @@ jobs:
         with:
           script: |
             github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: ${{ steps.trigger.outputs.issue_number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `🤖 フルワークフローが完了しました！
@@ -206,7 +228,7 @@ jobs:
               - 🌳 作業ブランチ: \`${{ steps.branch.outputs.branch_name }}\`
               - 🔗 PR: #${{ steps.cpr.outputs.pull-request-number }}
               - ⏰ 実行時刻: ${new Date().toISOString()}
-              - 🔄 並列実行: 有効
+              - 🔄 トリガー: ${{ steps.trigger.outputs.trigger }}
               
               レビューをお願いします！`
             })
@@ -219,13 +241,5 @@ jobs:
               issue_number: ${{ steps.cpr.outputs.pull-request-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ['auto-generated', 'claude-dev', 'issue-${{ github.event.issue.number }}', 'parallel-execution']
+              labels: ['auto-generated', 'claude-dev', 'issue-${{ steps.trigger.outputs.issue_number }}', 'parallel-execution']
             })
-            
-      - name: 📊 Update project board
-        continue-on-error: true
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // プロジェクトボードへの自動追加（オプション）
-            console.log(`PR #${{ steps.cpr.outputs.pull-request-number }} created for Issue #${{ github.event.issue.number }}`)
