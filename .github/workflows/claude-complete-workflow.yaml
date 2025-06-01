@@ -72,10 +72,12 @@ jobs:
           
       - name: 📊 Check for conflicts
         id: conflict-check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ここが重要！
         run: |
           echo "🔍 Checking for potential conflicts..."
-          git fetch origin 'refs/pull/*/head:refs/remotes/origin/pr/*'
-          ACTIVE_PRS=$(gh pr list --state open --label claude-dev --json number,headRefName)
+          # Checking for potential conflicts...の部分を修正
+          ACTIVE_PRS=$(gh pr list --state open --label claude-dev --json number,headRefName) || echo "[]"
           echo "active_prs=${ACTIVE_PRS}" >> $GITHUB_OUTPUT
           
       - name: 📝 Get issue details
