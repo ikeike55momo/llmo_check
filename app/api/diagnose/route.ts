@@ -4,8 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getCachedDiagnosis, saveDiagnosisCache } from '@/lib/supabase';
-import { diagnoseWebsiteContent } from '@/lib/anthropic';
 import { scrapeWebpage } from '@/lib/scraper';
 
 /** Edge Runtimeを指定 */
@@ -59,8 +57,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     console.log(`診断開始: ${trimmedUrl}`);
 
-    // Step 1: キャッシュ確認
+    // Step 1: キャッシュ確認（動的import）
     try {
+      const { getCachedDiagnosis } = await import('@/lib/supabase');
       const cachedResult = await getCachedDiagnosis(trimmedUrl);
       if (cachedResult) {
         console.log(`キャッシュヒット: ${trimmedUrl}`);
@@ -92,9 +91,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Step 3: AI分析実行
+    // Step 3: AI分析実行（動的import）
     let diagnosis: string;
     try {
+      const { diagnoseWebsiteContent } = await import('@/lib/anthropic');
       diagnosis = await diagnoseWebsiteContent(scrapedContent);
       console.log(`AI分析完了: ${diagnosis.length}文字`);
     } catch (aiError) {
@@ -108,8 +108,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Step 4: 結果をキャッシュに保存
+    // Step 4: 結果をキャッシュに保存（動的import）
     try {
+      const { saveDiagnosisCache } = await import('@/lib/supabase');
       await saveDiagnosisCache(trimmedUrl, diagnosis);
       console.log(`キャッシュ保存完了: ${trimmedUrl}`);
     } catch (cacheError) {
