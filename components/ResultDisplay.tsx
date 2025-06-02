@@ -31,26 +31,26 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-8">
+    <div className="w-full max-w-5xl mx-auto mt-4 sm:mt-8 px-4 sm:px-6">
       {/* ローディング状態 */}
       {status === 'loading' && (
         <div className="result-card">
-          <div className="flex items-center justify-center py-12">
+          <div className="flex items-center justify-center py-8 sm:py-12">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <div className="inline-block animate-spin rounded-full h-10 sm:h-12 w-10 sm:w-12 border-b-2 border-primary mb-4"></div>
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                 AI分析中...
               </h3>
-              <p className="text-gray-600">
-                WebサイトのコンテンツをAIが詳細に分析しています。<br />
-                しばらくお待ちください。
+              <p className="text-sm sm:text-base text-gray-600 px-4">
+                WebサイトのコンテンツをAIが詳細に分析しています。<br className="hidden sm:block" />
+                <span className="sm:hidden"> </span>しばらくお待ちください。
               </p>
-              <div className="mt-4 bg-gray-100 rounded-lg p-3">
-                <div className="flex items-center text-sm text-gray-600">
-                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <div className="mt-4 bg-gray-100 rounded-lg p-3 mx-4 sm:mx-0">
+                <div className="flex items-center justify-center text-xs sm:text-sm text-gray-600">
+                  <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
-                  キャッシュされた結果がある場合は数秒で完了します
+                  <span className="text-center">キャッシュされた結果がある場合は数秒で完了します</span>
                 </div>
               </div>
             </div>
@@ -62,65 +62,68 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
       {status === 'success' && data && (
         <div className="result-card">
           {/* 結果ヘッダー */}
-          <div className="flex items-start justify-between mb-8 pb-6 border-b border-gray-200">
-            <div className="flex-1">
-              <div className="flex items-center mb-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center mr-3">
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+          <div className="mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center mb-3">
+                  <div className="w-7 sm:w-8 h-7 sm:h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                    <svg className="w-4 sm:w-5 h-4 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    AI診断レポート
+                  </h3>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">
-                  AI診断レポート
-                </h3>
+                
+                <div className="space-y-2 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-4 text-xs sm:text-sm text-gray-600">
+                  <div className="flex items-center min-w-0">
+                    <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-medium mr-1.5">対象URL:</span>
+                    <a 
+                      href={data.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline font-medium truncate min-w-0 flex-1 sm:max-w-xs"
+                      title={data.url}
+                    >
+                      {data.url}
+                    </a>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs sm:text-sm">{new Date(data.analyzedAt).toLocaleString('ja-JP')}</span>
+                  </div>
+                  
+                  {data.cached && (
+                    <div className="flex items-center px-2 sm:px-3 py-1 rounded-full text-xs bg-secondary/10 text-secondary font-medium">
+                      <svg className="w-3 h-3 mr-1 sm:mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                      </svg>
+                      キャッシュ使用
+                    </div>
+                  )}
+                </div>
               </div>
               
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              {/* リセットボタン */}
+              {onReset && (
+                <button
+                  onClick={onReset}
+                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors min-h-[44px] touch-manipulation"
+                >
+                  <svg className="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  <span className="font-medium">対象URL:</span>
-                  <a 
-                    href={data.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="ml-1.5 text-primary hover:underline font-medium truncate max-w-sm"
-                  >
-                    {data.url}
-                  </a>
-                </div>
-                
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                  </svg>
-                  <span>{new Date(data.analyzedAt).toLocaleString('ja-JP')}</span>
-                </div>
-                
-                {data.cached && (
-                  <div className="flex items-center px-3 py-1 rounded-full text-xs bg-secondary/10 text-secondary font-medium">
-                    <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                    </svg>
-                    キャッシュ使用
-                  </div>
-                )}
-              </div>
+                  新しい診断
+                </button>
+              )}
             </div>
-            
-            {/* リセットボタン */}
-            {onReset && (
-              <button
-                onClick={onReset}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors ml-4"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                新しい診断
-              </button>
-            )}
           </div>
 
           {/* 診断結果本文 */}
@@ -128,49 +131,49 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
             <ReactMarkdown
               components={{
                 h1: ({ children }) => (
-                  <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-primary/20">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 pb-2 sm:pb-3 border-b-2 border-primary/20">
                     {children}
                   </h1>
                 ),
                 h2: ({ children }) => (
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-8 flex items-center">
-                    <div className="w-6 h-6 bg-gradient-to-r from-primary to-secondary rounded mr-3"></div>
-                    {children}
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 mt-6 sm:mt-8 flex items-center">
+                    <div className="w-5 sm:w-6 h-5 sm:h-6 bg-gradient-to-r from-primary to-secondary rounded mr-2 sm:mr-3 flex-shrink-0"></div>
+                    <span className="leading-tight">{children}</span>
                   </h2>
                 ),
                 h3: ({ children }) => (
-                  <h3 className="text-xl font-semibold text-gray-700 mb-3 mt-6 pl-4 border-l-4 border-secondary">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2 sm:mb-3 mt-4 sm:mt-6 pl-3 sm:pl-4 border-l-4 border-secondary">
                     {children}
                   </h3>
                 ),
                 p: ({ children }) => (
-                  <p className="text-gray-700 leading-relaxed mb-4 text-base">
+                  <p className="text-gray-700 leading-relaxed mb-3 sm:mb-4 text-sm sm:text-base">
                     {children}
                   </p>
                 ),
                 ul: ({ children }) => (
-                  <ul className="list-none space-y-2 mb-4 ml-4">
+                  <ul className="list-none space-y-1.5 sm:space-y-2 mb-3 sm:mb-4 ml-2 sm:ml-4">
                     {children}
                   </ul>
                 ),
                 li: ({ children }) => (
-                  <li className="flex items-start text-gray-700">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2.5 mr-3 flex-shrink-0"></div>
+                  <li className="flex items-start text-gray-700 text-sm sm:text-base">
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 sm:mt-2.5 mr-2 sm:mr-3 flex-shrink-0"></div>
                     <span className="leading-relaxed">{children}</span>
                   </li>
                 ),
                 strong: ({ children }) => (
-                  <strong className="font-semibold text-gray-900 bg-yellow-50 px-1 py-0.5 rounded">
+                  <strong className="font-semibold text-gray-900 bg-yellow-50 px-1 py-0.5 rounded text-sm sm:text-base">
                     {children}
                   </strong>
                 ),
                 code: ({ children }) => (
-                  <code className="bg-gray-100 text-accent px-2 py-1 rounded font-mono text-sm">
+                  <code className="bg-gray-100 text-accent px-1.5 sm:px-2 py-0.5 sm:py-1 rounded font-mono text-xs sm:text-sm break-all">
                     {children}
                   </code>
                 ),
                 blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-primary/30 pl-4 py-2 my-4 bg-gray-50 rounded-r italic">
+                  <blockquote className="border-l-4 border-primary/30 pl-3 sm:pl-4 py-2 my-3 sm:my-4 bg-gray-50 rounded-r italic text-sm sm:text-base">
                     {children}
                   </blockquote>
                 ),
@@ -205,24 +208,24 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
       {/* エラー状態 */}
       {status === 'error' && (
         <div className="result-card border-accent/20">
-          <div className="text-center py-8">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-accent/10 mb-4">
-              <svg className="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center py-6 sm:py-8 px-4">
+            <div className="mx-auto flex items-center justify-center h-10 sm:h-12 w-10 sm:w-12 rounded-full bg-accent/10 mb-4">
+              <svg className="h-5 sm:h-6 w-5 sm:w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
               診断エラーが発生しました
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-sm sm:text-base text-gray-600 mb-4 px-2">
               {errorInfo?.message || ' 診断処理中に予期しないエラーが発生しました。'}
             </p>
             
             {/* エラー詳細（コードがある場合） */}
             {errorInfo?.code && (
-              <div className="bg-gray-100 rounded-lg p-3 mb-4">
-                <p className="text-sm text-gray-600">
-                  エラーコード: <code className="bg-white px-2 py-1 rounded text-accent font-mono">{errorInfo.code}</code>
+              <div className="bg-gray-100 rounded-lg p-3 mb-4 mx-4 sm:mx-0">
+                <p className="text-xs sm:text-sm text-gray-600">
+                  エラーコード: <code className="bg-white px-2 py-1 rounded text-accent font-mono text-xs">{errorInfo.code}</code>
                 </p>
               </div>
             )}
@@ -231,9 +234,9 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
             {onReset && (
               <button
                 onClick={onReset}
-                className="inline-flex items-center px-6 py-3 border border-transparent rounded-lg text-base font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+                className="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent rounded-lg text-sm sm:text-base font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors min-h-[44px] touch-manipulation"
               >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 sm:w-5 h-4 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 再試行

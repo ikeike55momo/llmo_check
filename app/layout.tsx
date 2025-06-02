@@ -67,12 +67,12 @@ export default function RootLayout({
         {/* メインヘッダー */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <h1 className="text-xl font-bold text-primary">
+            <div className="flex justify-between items-center h-14 sm:h-16">
+              <div className="flex items-center min-w-0 flex-1">
+                <h1 className="text-lg sm:text-xl font-bold text-primary truncate">
                   LLMO診断サイト
                 </h1>
-                <span className="ml-2 text-sm text-gray-500 hidden sm:inline">
+                <span className="ml-2 text-xs sm:text-sm text-gray-500 hidden sm:inline truncate">
                   AI powered Webサイト分析ツール
                 </span>
               </div>
@@ -86,10 +86,10 @@ export default function RootLayout({
         </main>
 
         {/* フッター */}
-        <footer className="bg-neutral-dark text-white py-8">
+        <footer className="bg-neutral-dark text-white py-6 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <p className="text-sm text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-400">
                 © 2024 LLMO診断サイト. Powered by AI.
               </p>
             </div>
