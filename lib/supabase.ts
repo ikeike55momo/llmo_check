@@ -3,30 +3,39 @@
  * データベース接続とキャッシュ機能を提供
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-/** Supabase設定の検証 */
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-
-if (!supabaseUrl) {
-  throw new Error('NEXT_PUBLIC_SUPABASE_URL環境変数が設定されていません');
-}
-
-if (!supabaseServiceKey) {
-  throw new Error('SUPABASE_SERVICE_KEY環境変数が設定されていません');
-}
+/** Supabaseクライアントのキャッシュ */
+let supabaseClient: SupabaseClient | null = null;
 
 /**
- * Supabaseクライアント（サービスロール）
- * Edge Functionsでのサーバーサイド処理用
+ * Supabaseクライアントを取得（遅延初期化）
  */
-export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-  },
-});
+function getSupabaseClient(): SupabaseClient {
+  if (supabaseClient) {
+    return supabaseClient;
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+  if (!supabaseUrl) {
+    throw new Error('NEXT_PUBLIC_SUPABASE_URL環境変数が設定されていません');
+  }
+
+  if (!supabaseServiceKey) {
+    throw new Error('SUPABASE_SERVICE_KEY環境変数が設定されていません');
+  }
+
+  supabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+
+  return supabaseClient;
+}
 
 /** 診断キャッシュのデータ構造 */
 export interface DiagnosisCacheRow {
@@ -42,6 +51,8 @@ export interface DiagnosisCacheRow {
  */
 export async function getCachedDiagnosis(url: string): Promise<string | null> {
   try {
+    const supabase = getSupabaseClient();
+    
     // 24時間前の時刻を計算
     const twentyFourHoursAgo = new Date();
     twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
@@ -76,6 +87,8 @@ export async function getCachedDiagnosis(url: string): Promise<string | null> {
  */
 export async function saveDiagnosisCache(url: string, result: string): Promise<void> {
   try {
+    const supabase = getSupabaseClient();
+    
     const { error } = await supabase
       .from('diagnosis_cache')
       .insert([
@@ -102,6 +115,8 @@ export async function saveDiagnosisCache(url: string, result: string): Promise<v
  */
 export async function cleanupOldCache(daysOld: number = 7): Promise<void> {
   try {
+    const supabase = getSupabaseClient();
+    
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - daysOld);
 

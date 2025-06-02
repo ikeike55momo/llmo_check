@@ -5,19 +5,29 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 
-/** Anthropic API設定の検証 */
-const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
-
-if (!anthropicApiKey) {
-  throw new Error('ANTHROPIC_API_KEY環境変数が設定されていません');
-}
+/** Anthropicクライアントのキャッシュ */
+let anthropicClient: Anthropic | null = null;
 
 /**
- * Anthropic Claudeクライアント
+ * Anthropicクライアントを取得（遅延初期化）
  */
-const anthropic = new Anthropic({
-  apiKey: anthropicApiKey,
-});
+function getAnthropicClient(): Anthropic {
+  if (anthropicClient) {
+    return anthropicClient;
+  }
+
+  const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!anthropicApiKey) {
+    throw new Error('ANTHROPIC_API_KEY環境変数が設定されていません');
+  }
+
+  anthropicClient = new Anthropic({
+    apiKey: anthropicApiKey,
+  });
+
+  return anthropicClient;
+}
 
 /**
  * LLMO詳細診断用の高度なプロンプトテンプレート
@@ -177,7 +187,7 @@ export async function diagnoseWebsiteContent(content: string): Promise<string> {
     const finalPrompt = LLMO_DETAILED_DIAGNOSIS_PROMPT.replace('{content}', truncatedContent);
 
     // Claude API呼び出し（詳細分析のため設定を調整）
-    const response = await anthropic.messages.create({
+    const response = await getAnthropicClient().messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 8000, // 詳細な分析のため増量
       temperature: 0.2, // わずかな創造性を許可しつつ一貫性を保持
