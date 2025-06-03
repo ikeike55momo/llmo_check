@@ -159,19 +159,18 @@ export default function HomePage() {
 
         {/* LLMO最適化のための詳細情報セクション */}
         <section className="mt-12 sm:mt-16 max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 sm:p-8 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 sm:p-8 mb-8 text-center">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-center">
               🤖 LLMO診断サイトとは？AI時代の新しいWebサイト分析
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">🎯 なぜLLMO最適化が重要なのか</h3>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 justify-center">
+              <div className="mx-auto">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 text-center">🎯 なぜLLMO最適化が重要なのか</h3>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-4 text-center mx-auto max-w-xl">
                   <strong>LLMO（Large Language Model Optimization）</strong>とは、ChatGPT、Claude、Gemini、Perplexityなどの
                   AI検索エンジンにWebサイトが適切に理解・引用されるための最適化手法です。
                 </p>
-                <ul className="text-sm text-gray-600 space-y-2">
+                <ul className="text-sm text-gray-600 space-y-2 text-left inline-block mx-auto">
                   <li className="flex items-start">
                     <span className="text-blue-500 mr-2">●</span>
                     <span>AI検索での上位表示確率向上</span>
