@@ -108,7 +108,7 @@ export default function HomePage() {
         </div>
 
         {/* 使い方ガイド（上部に移動） */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-8 max-w-3xl mx-auto">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center">
             📋 診断の使い方ガイド
           </h2>
@@ -189,8 +189,8 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* 機能紹介（下部に移動） */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-5xl mx-auto">
+          {/* 機能紹介（下部に移動・中央寄せ2列に変更） */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-2xl mx-auto justify-center">
             <div className="text-center p-4 sm:p-6 bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="w-10 sm:w-12 h-10 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <svg className="w-5 sm:w-6 h-5 sm:h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
@@ -202,8 +202,7 @@ export default function HomePage() {
                 URLを入力するだけで、数秒から数十秒で詳細な診断結果を取得
               </p>
             </div>
-
-            <div className="text-center p-4 sm:p-6 bg-white rounded-lg shadow-sm border border-gray-200 sm:col-span-2 md:col-span-1">
+            <div className="text-center p-4 sm:p-6 bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="w-10 sm:w-12 h-10 sm:h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <svg className="w-5 sm:w-6 h-5 sm:h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
