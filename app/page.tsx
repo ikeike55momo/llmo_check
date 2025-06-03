@@ -8,19 +8,24 @@
 import { useState } from 'react';
 import DiagnoseForm from '@/components/DiagnoseForm';
 import ResultDisplay from '@/components/ResultDisplay';
+import AuthHeader from '@/components/auth/AuthHeader';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import type { DiagnosisResult, FormStatus, ErrorInfo } from '@/types/diagnosis';
 
 /**
  * メインページコンポーネント
  * アプリケーション全体の状態管理と診断フローを制御
  */
-export default function HomePage() {
+function HomePageContent() {
   /** フォームの現在の状態 */
   const [formStatus, setFormStatus] = useState<FormStatus>('idle');
   /** 診断結果データ */
   const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | undefined>(undefined);
   /** エラー情報 */
   const [errorInfo, setErrorInfo] = useState<ErrorInfo | undefined>(undefined);
+
+  const { state } = useAuth();
 
   /**
    * 診断実行ハンドラー
@@ -33,12 +38,31 @@ export default function HomePage() {
     setErrorInfo(undefined);
 
     try {
+      // 認証トークンの取得
+      let authHeaders: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+
+      if (state.isAuthenticated && state.user) {
+        // 認証済みユーザーの場合、Authorizationヘッダーを追加
+        try {
+          const { getAuthSupabaseClient } = await import('@/lib/auth');
+          const supabase = getAuthSupabaseClient();
+          const { data: { session } } = await supabase.auth.getSession();
+          
+          if (session?.access_token) {
+            authHeaders.Authorization = `Bearer ${session.access_token}`;
+          }
+        } catch (authError) {
+          console.warn('認証トークン取得エラー:', authError);
+          // 認証エラーがあっても診断は続行（匿名として処理）
+        }
+      }
+
       // 診断API呼び出し
       const response = await fetch('/api/diagnose', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: authHeaders,
         body: JSON.stringify({ url }),
       });
 
@@ -55,6 +79,8 @@ export default function HomePage() {
         analysis: responseData.result,
         analyzedAt: new Date().toISOString(),
         cached: responseData.cached || false,
+        isAuthenticated: responseData.isAuthenticated || false,
+        hasFullAccess: responseData.hasFullAccess || false,
       };
 
       setDiagnosisResult(result);
@@ -85,6 +111,11 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-light to-white">
       <div className="container mx-auto px-4 py-6 sm:py-12">
+        {/* 認証ヘッダー */}
+        <div className="flex justify-end mb-6">
+          <AuthHeader />
+        </div>
+
         {/* メインヘッダー - SEO最適化済み */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
@@ -290,5 +321,16 @@ export default function HomePage() {
         </section>
       </div>
     </div>
+  );
+}
+
+/**
+ * 認証プロバイダーでラップしたメインページコンポーネント
+ */
+export default function HomePage() {
+  return (
+    <AuthProvider>
+      <HomePageContent />
+    </AuthProvider>
   );
 } 

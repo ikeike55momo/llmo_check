@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { scrapeWebpage } from '@/lib/scraper';
+import { getServerSupabaseClient, filterDiagnosisForAnonymous } from '@/lib/auth';
 
 /** Edge Runtimeを指定 */
 export const runtime = 'edge';
@@ -13,6 +14,8 @@ export const runtime = 'edge';
 interface DiagnoseApiResponse {
   result: string;
   cached: boolean;
+  isAuthenticated?: boolean;
+  hasFullAccess?: boolean;
 }
 
 /** APIエラーレスポンスの型定義 */
@@ -57,15 +60,59 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     console.log(`診断開始: ${trimmedUrl}`);
 
+    // 認証状態をチェック
+    let isAuthenticated = false;
+    let userId: string | null = null;
+    
+    try {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        
+        const supabase = getServerSupabaseClient();
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        
+        if (!authError && user) {
+          isAuthenticated = true;
+          userId = user.id;
+          console.log(`認証済みユーザー: ${user.email}`);
+        }
+      }
+    } catch (authError) {
+      console.warn('認証チェックエラー（匿名として処理）:', authError);
+      // 認証エラーは致命的ではない、匿名ユーザーとして処理継続
+    }
+
     // Step 1: キャッシュ確認（動的import）
     try {
       const { getCachedDiagnosis } = await import('@/lib/supabase');
       const cachedResult = await getCachedDiagnosis(trimmedUrl);
       if (cachedResult) {
         console.log(`キャッシュヒット: ${trimmedUrl}`);
+        
+        // 認証済みユーザーの場合、診断履歴に保存（キャッシュからでも）
+        if (isAuthenticated && userId) {
+          try {
+            const { saveDiagnosisHistory } = await import('@/lib/auth');
+            await saveDiagnosisHistory(userId, trimmedUrl, cachedResult);
+            console.log(`キャッシュからの診断履歴保存完了: ${userId}`);
+          } catch (historyError) {
+            console.warn('キャッシュからの診断履歴保存エラー:', historyError);
+          }
+        }
+        
+        // コンテンツフィルタリング適用
+        let finalCachedResult = cachedResult;
+        if (!isAuthenticated) {
+          finalCachedResult = filterDiagnosisForAnonymous(cachedResult);
+          console.log(`キャッシュ結果を非認証ユーザー向けにフィルタリング`);
+        }
+        
         return NextResponse.json({
-          result: cachedResult,
+          result: finalCachedResult,
           cached: true,
+          isAuthenticated,
+          hasFullAccess: isAuthenticated,
         } as DiagnoseApiResponse);
       }
     } catch (cacheError) {
@@ -118,10 +165,32 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // キャッシュ保存失敗はユーザーには影響しない
     }
 
-    // Step 5: 成功レスポンス
+    // Step 5: 認証済みユーザーの場合、診断履歴に保存
+    if (isAuthenticated && userId) {
+      try {
+        const { saveDiagnosisHistory } = await import('@/lib/auth');
+        await saveDiagnosisHistory(userId, trimmedUrl, diagnosis);
+        console.log(`診断履歴保存完了: ${userId}`);
+      } catch (historyError) {
+        console.warn('診断履歴保存エラー（レスポンスは返却）:', historyError);
+        // 履歴保存失敗はユーザーには影響しない
+      }
+    }
+
+    // Step 6: コンテンツフィルタリングと成功レスポンス
+    let finalResult = diagnosis;
+    
+    // 非認証ユーザーの場合、結果をフィルタリング
+    if (!isAuthenticated) {
+      finalResult = filterDiagnosisForAnonymous(diagnosis);
+      console.log(`非認証ユーザー向けにフィルタリング実行`);
+    }
+
     return NextResponse.json({
-      result: diagnosis,
+      result: finalResult,
       cached: false,
+      isAuthenticated,
+      hasFullAccess: isAuthenticated,
     } as DiagnoseApiResponse);
 
   } catch (error) {
