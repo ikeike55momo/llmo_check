@@ -13,6 +13,10 @@ export interface DiagnosisResult {
   analyzedAt: string;
   /** キャッシュから取得したかどうか */
   cached: boolean;
+  /** ユーザーが認証済みかどうか */
+  isAuthenticated?: boolean;
+  /** 完全な結果にアクセス可能かどうか */
+  hasFullAccess?: boolean;
 }
 
 /** 診断APIのリクエスト形式 */

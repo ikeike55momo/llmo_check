@@ -157,22 +157,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//supabase.co" />
       </head>
       <body className="h-full bg-neutral-light font-sans antialiased">
-        {/* メインヘッダー */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-14 sm:h-16">
-              <div className="flex items-center min-w-0 flex-1">
-                <h1 className="text-lg sm:text-xl font-bold text-primary truncate">
-                  LLMO診断サイト
-                </h1>
-                <span className="ml-2 text-xs sm:text-sm text-gray-500 hidden sm:inline truncate">
-                  AI powered Webサイト分析ツール
-                </span>
-              </div>
-            </div>
-          </div>
-        </header>
-
         {/* メインコンテンツエリア */}
         <main className="flex-1 min-h-screen">
           {children}

@@ -6,6 +6,7 @@
 'use client';
 
 import ReactMarkdown from 'react-markdown';
+import MembershipPrompt from './auth/MembershipPrompt';
 import type { DiagnosisResult, FormStatus, ErrorInfo } from '@/types/diagnosis';
 
 /** 結果表示プロパティの型定義 */
@@ -126,6 +127,14 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
             </div>
           </div>
 
+          {/* 会員登録促進プロンプト（非会員の場合） */}
+          {data.isAuthenticated === false && !data.hasFullAccess && (
+            <MembershipPrompt 
+              variant="banner"
+              customMessage="現在表示されているのは基本的な評価結果のみです。詳細な分析内容、具体的な改善提案、コード例を見るには無料の会員登録をお願いします。"
+            />
+          )}
+
           {/* 診断結果本文 */}
           <div className="markdown-content">
             <ReactMarkdown
@@ -185,7 +194,7 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
 
           {/* フッター情報 */}
           <div className="mt-8 pt-6 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-4">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm">
               <div className="flex items-center text-gray-600">
                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
@@ -193,6 +202,24 @@ export default function ResultDisplay({ status, data, errorInfo, onReset }: Resu
                 この診断結果は Claude Sonnet 4 AI によって生成されました
               </div>
               <div className="flex items-center space-x-4">
+                {/* 認証状態インジケーター */}
+                <div className="flex items-center">
+                  {data.isAuthenticated ? (
+                    <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      会員版
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9zM13.73 21a2 2 0 01-3.46 0" clipRule="evenodd" />
+                      </svg>
+                      基本版
+                    </span>
+                  )}
+                </div>
                 <span className="px-2 py-1 bg-white rounded text-xs font-medium text-gray-600">
                   {data.cached ? 'キャッシュ使用' : '新規分析'}
                 </span>
