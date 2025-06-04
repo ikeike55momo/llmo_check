@@ -93,7 +93,7 @@ export default function HomePage() {
           <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-2 mb-6">
             <strong>Claude Sonnet 4 AI</strong>を活用して、あらゆるWebサイトの<strong>SEO最適化</strong>、<strong>LLMO対応度</strong>、
             コンテンツ構造、ユーザビリティを包括的に分析します。URLを入力するだけで、
-            プロフェッショナルレベルの<strong>無料診断結果</strong>を即座に取得できます。
+            プロフェッショナルレベルの<strong>診断結果</strong>を即座に取得できます。
           </p>
           
           {/* 主要キーワードとベネフィット */}
@@ -252,7 +252,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          
+
           {/* プライバシーとセキュリティ */}
           <div className="text-center">
             <div className="max-w-4xl mx-auto px-4">
