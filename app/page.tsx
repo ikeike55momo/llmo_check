@@ -88,10 +88,10 @@ export default function HomePage() {
         {/* メインヘッダー - SEO最適化済み */}
         <div className="text-center mb-10 sm:mb-16">
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-            Claude Sonnet 4による無料AI Webサイト診断ツール
+            AIによる無料AI Webサイト診断ツール
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-2 mb-6">
-            <strong>Claude Sonnet 4 AI</strong>を活用して、あらゆるWebサイトの<strong>SEO最適化</strong>、<strong>LLMO対応度</strong>、
+            <strong>AI</strong>を活用して、あらゆるWebサイトの<strong>SEO最適化</strong>、<strong>LLMO対応度</strong>、
             コンテンツ構造、ユーザビリティを包括的に分析します。URLを入力するだけで、
             プロフェッショナルレベルの<strong>診断結果</strong>を即座に取得できます。
           </p>
@@ -104,6 +104,45 @@ export default function HomePage() {
             <p className="italic">
               検索エンジン最適化からAI検索対応まで、現代のWebサイトに必要な全ての要素を一括診断
             </p>
+          </div>
+        </div>
+
+        {/* 使い方ガイド */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
+            📋 診断の使い方ガイド
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-blue-600">1</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">URLを入力</h3>
+              <p className="text-sm text-gray-600">
+                診断したいWebサイトのURLを入力フィールドに貼り付けてください
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-green-600">2</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">AI分析実行</h3>
+              <p className="text-sm text-gray-600">
+                AIが数秒〜数十秒でサイトを詳細分析します
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-purple-600">3</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">改善案を取得</h3>
+              <p className="text-sm text-gray-600">
+                SEO・LLMO・ユーザビリティの具体的な改善提案をレポートで確認
+              </p>
+            </div>
           </div>
         </div>
 
@@ -129,7 +168,7 @@ export default function HomePage() {
             </div>
             <h3 className="text-base font-semibold text-gray-900 mb-3">高精度AI分析</h3>
             <p className="text-sm text-gray-600">
-              Claude Sonnet 4による最先端のAI技術で正確な診断を実施
+              最先端のAI技術で正確な診断を実施
             </p>
           </div>
 
@@ -189,70 +228,9 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">⚡ Claude Sonnet 4による高精度分析</h3>
-                <p className="text-base text-gray-700 leading-relaxed mb-5">
-                  最新の<strong>AI</strong>を使用して、従来のSEOツールでは不可能だった
-                  AI視点でのコンテンツ品質評価を実現しています。
-                </p>
-                <div className="flex flex-col sm:flex-row sm:justify-center sm:space-x-8 space-y-3 sm:space-y-0 text-sm text-gray-600">
-                  <div className="flex items-center justify-center">
-                    <span className="text-green-500 mr-3">●</span>
-                    <span>セマンティック要素の詳細分析</span>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <span className="text-green-500 mr-3">●</span>
-                    <span>コンテンツ階層構造の最適化提案</span>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <span className="text-green-500 mr-3">●</span>
-                    <span>ユーザーインテントとの整合性チェック</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           
-          {/* 使い方ガイド */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
-              📋 診断の使い方ガイド
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-bold text-blue-600">1</span>
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-3">URLを入力</h3>
-                <p className="text-sm text-gray-600">
-                  診断したいWebサイトのURLを入力フィールドに貼り付けてください
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-bold text-green-600">2</span>
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-3">AI分析実行</h3>
-                <p className="text-sm text-gray-600">
-                  AIが数秒〜数十秒でサイトを詳細分析します
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-bold text-purple-600">3</span>
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-3">改善案を取得</h3>
-                <p className="text-sm text-gray-600">
-                  SEO・LLMO・ユーザビリティの具体的な改善提案をレポートで確認
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* プライバシーとセキュリティ */}
           <div className="text-center">
             <div className="max-w-4xl mx-auto px-4">
