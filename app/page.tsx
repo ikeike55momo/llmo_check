@@ -167,49 +167,49 @@ export default function HomePage() {
               🤖 LLMO診断サイトとは？AI時代の新しいWebサイト分析
             </h2>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="max-w-4xl mx-auto text-center space-y-8">
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">🎯 なぜLLMO最適化が重要なのか</h3>
                 <p className="text-base text-gray-700 leading-relaxed mb-5">
                   <strong>LLMO（Large Language Model Optimization）</strong>とは、ChatGPT、Claude、Gemini、Perplexityなどの
                   AI検索エンジンにWebサイトが適切に理解・引用されるための最適化手法です。
                 </p>
-                <ul className="text-sm text-gray-600 space-y-3">
-                  <li className="flex items-start">
-                    <span className="text-blue-500 mr-3 mt-1">●</span>
+                <div className="flex flex-col sm:flex-row sm:justify-center sm:space-x-8 space-y-3 sm:space-y-0 text-sm text-gray-600">
+                  <div className="flex items-center justify-center">
+                    <span className="text-blue-500 mr-3">●</span>
                     <span>AI検索での上位表示確率向上</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-500 mr-3 mt-1">●</span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-blue-500 mr-3">●</span>
                     <span>コンテンツの引用可能性アップ</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-500 mr-3 mt-1">●</span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-blue-500 mr-3">●</span>
                     <span>構造化された情報提供の実現</span>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
               
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">⚡ Claude Sonnet 4による高精度分析</h3>
                 <p className="text-base text-gray-700 leading-relaxed mb-5">
-                  最新の<strong>Claude Sonnet 4</strong>を使用して、従来のSEOツールでは不可能だった
+                  最新の<strong>AI</strong>を使用して、従来のSEOツールでは不可能だった
                   AI視点でのコンテンツ品質評価を実現しています。
                 </p>
-                <ul className="text-sm text-gray-600 space-y-3">
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-3 mt-1">●</span>
+                <div className="flex flex-col sm:flex-row sm:justify-center sm:space-x-8 space-y-3 sm:space-y-0 text-sm text-gray-600">
+                  <div className="flex items-center justify-center">
+                    <span className="text-green-500 mr-3">●</span>
                     <span>セマンティック要素の詳細分析</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-3 mt-1">●</span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-green-500 mr-3">●</span>
                     <span>コンテンツ階層構造の最適化提案</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-3 mt-1">●</span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-green-500 mr-3">●</span>
                     <span>ユーザーインテントとの整合性チェック</span>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -237,7 +237,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-3">AI分析実行</h3>
                 <p className="text-sm text-gray-600">
-                  Claude Sonnet 4が数秒〜数十秒でサイトを詳細分析します
+                  AIが数秒〜数十秒でサイトを詳細分析します
                 </p>
               </div>
               
