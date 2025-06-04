@@ -108,80 +108,41 @@ export default function HomePage() {
         </div>
 
         {/* 使い方ガイド */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
             📋 診断の使い方ガイド
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-blue-600">1</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-lg font-bold text-blue-600">1</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-3">URLを入力</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">URLを入力</h3>
               <p className="text-sm text-gray-600">
                 診断したいWebサイトのURLを入力フィールドに貼り付けてください
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-green-600">2</span>
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-lg font-bold text-green-600">2</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-3">AI分析実行</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">AI分析実行</h3>
               <p className="text-sm text-gray-600">
                 AIが数秒〜数十秒でサイトを詳細分析します
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-purple-600">3</span>
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-lg font-bold text-purple-600">3</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-3">改善案を取得</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">改善案を取得</h3>
               <p className="text-sm text-gray-600">
                 SEO・LLMO・ユーザビリティの具体的な改善提案をレポートで確認
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* 機能紹介 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 sm:mb-16 max-w-5xl mx-auto">
-          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-3">即座の分析</h3>
-            <p className="text-sm text-gray-600">
-              URLを入力するだけで、数秒から数十秒で詳細な診断結果を取得
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-3">高精度AI分析</h3>
-            <p className="text-sm text-gray-600">
-              最先端のAI技術で正確な診断を実施
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 sm:col-span-2 lg:col-span-1">
-            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-              </svg>
-            </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-3">スマートキャッシュ</h3>
-            <p className="text-sm text-gray-600">
-              24時間以内の結果はキャッシュから高速取得
-            </p>
           </div>
         </div>
 
