@@ -5,6 +5,7 @@
 
 import type { Metadata } from 'next';
 import { Inter, Noto_Sans_JP } from 'next/font/google';
+import Image from 'next/image';
 import './globals.css';
 
 /** Google Fonts設定 */
@@ -22,6 +23,7 @@ const notoSansJP = Noto_Sans_JP({
 
 /** サイトのメタデータ設定 - SEO最適化済み */
 export const metadata: Metadata = {
+  metadataBase: new URL('https://llmocheck.ai'),
   title: 'LLMO対策チェックサイト - 無料AI webサイト分析ツール | SEO診断・LLMO最適化',
   description: 'あらゆるWebサイトのURLを入力するだけで、AIによる詳細な分析レポートを即座に取得。SEO診断、コンテンツ品質評価、ユーザビリティチェック、LLMO最適化度を総合的に診断する完全無料ツールです。Claude、ChatGPT、Gemini等のAI検索エンジン対応。',
   keywords: [
@@ -103,10 +105,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager */}
 
         {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         
         {/* Structured Data - LLMO・SEO最適化済み */}

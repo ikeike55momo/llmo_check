@@ -6,6 +6,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import DiagnoseForm from '@/components/DiagnoseForm';
 import ResultDisplay from '@/components/ResultDisplay';
 import type { DiagnosisResult, FormStatus, ErrorInfo } from '@/types/diagnosis';
@@ -87,6 +88,21 @@ export default function HomePage() {
       <div className="container mx-auto px-4 py-8 sm:py-12">
         {/* メインヘッダー - SEO最適化済み */}
         <div className="text-center mb-10 sm:mb-16">
+          {/* ロゴエリア */}
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <div className="w-40 sm:w-52 md:w-64 lg:w-72 xl:w-80">
+              <Image
+                src="/logo.png"
+                alt="LLMO対策チェック"
+                width={320}
+                height={320}
+                className="w-full h-auto"
+                priority
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+          </div>
+          
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             AIによる無料AI Webサイト診断ツール
           </h1>
@@ -237,26 +253,26 @@ export default function HomePage() {
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">
                 🔒 プライバシーとセキュリティ
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-sm text-gray-600">
-                <div className="flex items-center justify-center sm:justify-start p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-sm text-gray-600 max-w-3xl mx-auto">
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
                   <svg className="w-5 h-5 text-secondary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <span>個人情報は一切収集しません</span>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
                   <svg className="w-5 h-5 text-secondary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
                   <span>全通信はHTTPS暗号化済み</span>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
                   <svg className="w-5 h-5 text-secondary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
                   </svg>
                   <span>24時間高速キャッシュシステム</span>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
                   <svg className="w-5 h-5 text-secondary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>

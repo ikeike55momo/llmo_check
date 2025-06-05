@@ -1,0 +1,22 @@
+{
+  "name": "LLMO対策チェックサイト",
+  "short_name": "LLMO対策チェック",
+  "description": "AIによる無料Webサイト分析・診断ツール",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+} 

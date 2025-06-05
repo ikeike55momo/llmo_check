@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://llmo-check.vercel.app'
+  const baseUrl = 'https://llmocheck.ai'
   
   return {
     rules: [
